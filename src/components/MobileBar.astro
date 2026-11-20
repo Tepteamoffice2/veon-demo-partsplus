@@ -1,0 +1,40 @@
+---
+// Phone only: call, Telegram, Viber always one tap away after the first screen (concept §5 Навигация 390).
+import Icon from "./Icon.astro";
+import { phones, channels } from "../data/client";
+---
+<nav class="mbar" aria-label="Швидкий зв'язок" data-mbar data-rec="R-008">
+  <a href={phones.kyivstar.href}><Icon name="phone" /> <span>Подзвонити</span></a>
+  <a class="mbar__main" href={channels.telegram} target="_blank" rel="noopener"><Icon name="telegram" /> <span>Telegram</span></a>
+  <a href={channels.viber}><Icon name="viber" /> <span>Viber</span></a>
+</nav>
+
+<style>
+  .mbar { display: none; }
+  @media (max-width: 719.98px) {
+    .mbar {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      background: var(--color-text);
+      padding: var(--space-half);
+      padding-bottom: max(var(--space-half), env(safe-area-inset-bottom));
+      gap: var(--space-half);
+      transition: transform var(--dur-ui) var(--ease-out);
+    }
+    :global(.js) .mbar:not(.is-shown) { transform: translateY(110%); }
+    .mbar a {
+      display: flex; align-items: center; justify-content: center; gap: var(--space-1);
+      min-height: 3rem; border-radius: var(--radius);
+      color: var(--color-bg); font-weight: 600; font-size: var(--text-small); text-decoration: none;
+      transition: transform var(--dur-fast) var(--ease-out);
+    }
+    .mbar a:active { transform: scale(.97); }
+    .mbar a:focus-visible { outline-color: var(--color-accent); outline-offset: calc(var(--rule-strong) * -2); }
+    .mbar .mbar__main { background: var(--color-accent); color: var(--color-accent-ink); }
+    .mbar .mbar__main:focus-visible { outline-color: var(--color-text); }
+  }
+  @media (max-width: 719.98px) and (prefers-reduced-motion: reduce) {
+    .mbar, .mbar a { transition: none; }
+    .mbar a:active { transform: none; }
+  }
+</style>

@@ -1,0 +1,113 @@
+/* Hallmark · shape: custom · theme: custom · job: buy+visit · idea: "17 знаків VIN — і деталь на своєму місці: сторінка як логотип PARTS PLUS, синя деталь угорі, жовтий плюс — СТО" · vibe: "точний, національно-синьо-жовтий, інструментальний, київський"
+ * paper: #FFFFFF (герой #0057B8) · surface: absolute · accent: #FFD700 · display: Geologica · body: Onest · hero: синє поле з H1 і VIN-лінійкою на 17 клітинок · nav: біла закріплена шапка з якорями і «VIN у Telegram» · footer: світлий, якорі + FutureLink + підтверджені соцмережі · imagery: none (лише логотип) · signature: 17 смуг логотипа, що переходять із синього в жовтий до СТО
+ * axes: light/geometric-sans/chromatic-blue · posture: committed · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H5 E4 S5 R4 V4 · weakest: P, the page argues for one action only (send VIN to a manager); kept it, cut promo, prices and the brand wall so the argument stays readable */
+/* Hallmark · waive 7b · paper token is #FFFFFF by the approved concept palette · the PartsPlus logo pair blue and gold sits on pure white paper exactly as on the client logo */
+/* Hallmark · waive 39b · VIN-лінійка 17 клітинок і кнопка «Надіслати VIN у Telegram» по 64 px, на телефоні поле і кнопка 56 px · 17 знаків VIN-коду мають читатися великими на синьому полі, а кнопку Telegram на телефоні легко натиснути великим пальцем */
+/* Hallmark · answered F4 · жовта кнопка «Надіслати VIN у Telegram» єдина головна на синьому полі; синя заливка лише в кнопці Telegram у блоці «Три способи знайти деталь» на білому */
+/* Hallmark · dismissed 23 · the gold fill is only the 4px line under each filled VIN cell and the 6px ticks under the VIN field on the phone */
+/* Client design tokens: from design/concept.md (veon-concept: colors, fonts). PartsPlus only. */
+
+@font-face {
+  font-family: "Geologica";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../assets/fonts/geologica-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Geologica";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../assets/fonts/geologica-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Onest";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../assets/fonts/onest-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Onest";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../assets/fonts/onest-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Metric fallbacks: keep line boxes close to the web fonts while they load (CLS 0). */
+@font-face { font-family: "Geologica Fallback"; src: local("Arial"); size-adjust: 104%; ascent-override: 92%; descent-override: 24%; line-gap-override: 0%; }
+@font-face { font-family: "Onest Fallback"; src: local("Arial"); size-adjust: 101%; ascent-override: 96%; descent-override: 25%; line-gap-override: 0%; }
+
+:root {
+  /* Colour: the logo pair and its neutrals (concept §5 Look) */
+  --color-primary: #0057B8;        /* brand blue, PARTS half */
+  --color-primary-deep: #004494;   /* hover / pressed */
+  --color-accent: #FFD700;         /* brand gold, PLUS half */
+  --color-text: #0E1A2B;           /* ink */
+  --color-bg: #FFFFFF;             /* paper */
+  --color-surface: #F2F4F7;        /* catalog, footer, fields */
+  --color-muted: #4B5768;          /* secondary text on light */
+  --color-on-primary-muted: #D6E4F5; /* secondary text on blue */
+  --color-border: #6B7788;         /* field edges, cell outlines on light */
+  --color-on-primary: var(--color-bg);
+  --color-accent-ink: var(--color-text);
+  --color-focus: var(--color-primary);
+  --color-focus-on-primary: var(--color-accent);
+  --color-focus-on-accent: var(--color-text);
+
+  /* Type */
+  --font-display: "Geologica", "Geologica Fallback", system-ui, sans-serif;
+  --font-body: "Onest", "Onest Fallback", system-ui, sans-serif;
+  --display-sharp: "SHRP" 60;
+  --text-hero: clamp(2.5rem, 1.2rem + 5.2vw, 5.25rem);      /* 40 → 84 */
+  --text-section: clamp(1.875rem, 1.05rem + 2.9vw, 3.25rem); /* 30 → 52 */
+  --text-figure: clamp(1.5rem, 1.3rem + 0.6vw, 2rem);        /* 24 → 32 */
+  --text-lead: clamp(1.1875rem, 1.1rem + 0.3vw, 1.375rem);   /* 19 → 22 */
+  --text-body: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);     /* 16 → 17 */
+  --text-small: 0.875rem;                                     /* 14 */
+  --leading-display: 1.04;
+  --leading-text: 1.55;
+  --tracking-display: -0.02em;
+
+  /* Space: base 8 */
+  --space-half: 0.25rem;  /* 4 */
+  --space-1: 0.5rem;      /* 8 */
+  --space-2: 1rem;        /* 16 */
+  --space-3: 1.5rem;      /* 24 */
+  --space-4: 2rem;        /* 32 */
+  --space-5: 3rem;        /* 48 */
+  --space-6: 4.5rem;      /* 72 */
+  --space-7: 7rem;        /* 112 */
+  --space-8: 10rem;       /* 160 */
+  --space-section: clamp(4.5rem, 2.6rem + 7.8vw, 10rem);   /* 72 → 160 */
+  --space-section-s: clamp(4.5rem, 3.4rem + 4.4vw, 7rem);  /* 72 → 112 */
+  --space-section-m: clamp(4rem, 2.4rem + 6.4vw, 8.5rem);  /* 64 → 136 */
+  --vin-gap: 0.375rem;    /* 6, between VIN cells */
+  --space: clamp(1.25rem, -0.2rem + 6vw, 5rem);            /* page gutter: 20 → 80 */
+
+  /* Layout */
+  --container: 1280px;
+  --header-h: 72px;
+  --tap: 44px;
+  --control-h: 56px;
+  --control-h-l: 64px;
+  --radius: 2px;
+  --rule: 1px;
+  --rule-strong: 2px;
+  --stripe-w: 0.75rem;
+
+  /* Motion */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --dur: 600ms;
+  --dur-fast: 160ms;
+  --dur-ui: 220ms;
+}
+@media (max-width: 719.98px) {
+  :root { --header-h: 56px; --stripe-w: 0.375rem; }
+}

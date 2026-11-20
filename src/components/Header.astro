@@ -1,0 +1,152 @@
+---
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import logo from "../assets/partsplus-logo.svg?url";
+import { phones, channels, nav } from "../data/client";
+---
+<header class="site-header" data-header data-rec="R-005">
+  <div class="container header__row">
+    <a class="header__logo" href="#top">
+      <img src={logo} width="70" height="48" alt="PartsPlus, на початок сторінки" />
+    </a>
+
+    <nav class="header__nav" aria-label="Розділи сторінки">
+      <ul>
+        {nav.map((item) => (
+          <li><a href={item.href} data-rec={item.href === "#sto" ? "R-010" : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <a class="header__phone num" href={phones.kyivstar.href}>{phones.kyivstar.label}</a>
+      <a class="btn btn--blue header__tg" href={channels.telegram} target="_blank" rel="noopener" data-rec="R-009">VIN у Telegram</a>
+      <div class="header__lang">
+        <span class="header__lang-current" aria-current="true" lang="uk">UA</span>
+        <FutureLink class="future-link--end" note="Російська версія з'явиться у повній версії сайту"><span lang="ru">RU</span></FutureLink>
+      </div>
+      <a class="icon-btn header__icon" href={phones.kyivstar.href} aria-label={`Подзвонити ${phones.kyivstar.label}`}><Icon name="phone" /></a>
+      <a class="icon-btn header__icon" href={channels.telegram} target="_blank" rel="noopener" aria-label="Написати в Telegram"><Icon name="telegram" /></a>
+
+      <details class="menu" data-menu>
+        <summary class="icon-btn menu__toggle">
+          <span class="menu__icon-open"><Icon name="menu" size={22} /></span>
+          <span class="menu__icon-close"><Icon name="close" size={22} /></span>
+          <span class="visually-hidden">Меню</span>
+        </summary>
+        <div class="menu__panel">
+          <nav aria-label="Меню розділів">
+            <ul class="menu__nav">
+              {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+            </ul>
+          </nav>
+          <ul class="menu__phones">
+            {[phones.kyivstar, phones.vodafone, phones.lifecell].map((p) => (
+              <li><a class="num" href={p.href}>{p.label}</a> <span>{p.operator}</span></li>
+            ))}
+            <li><a class="num" href={phones.sto.href}>{phones.sto.label}</a> <span>{phones.sto.operator}</span></li>
+          </ul>
+          <p class="menu__lang">
+            <span aria-current="true">UA</span>
+            <FutureLink class="future-link--up" note="Російська версія з'явиться у повній версії сайту"><span lang="ru">RU</span></FutureLink>
+          </p>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--color-bg);
+    border-bottom: var(--rule) solid transparent;
+    transition: border-color var(--dur-ui) var(--ease-out);
+  }
+  .site-header:global(.is-scrolled) { border-bottom-color: var(--color-border); }
+  .header__row { display: flex; align-items: center; gap: var(--space-3); height: var(--header-h); }
+  .header__logo { display: inline-flex; align-items: center; min-height: var(--tap); flex: none; border-radius: var(--radius); }
+  .header__logo img { width: auto; height: 48px; }
+
+  .header__nav { display: none; margin-inline-start: auto; }
+  .header__nav ul { display: flex; gap: var(--space-3); }
+  .header__nav a {
+    display: inline-flex; align-items: center; min-height: var(--tap);
+    font-size: 0.9375rem; font-weight: 400; text-decoration: none; white-space: nowrap;
+    background: linear-gradient(var(--color-primary), var(--color-primary)) no-repeat left bottom 8px / 100% 2px;
+    background-size: 0 2px;
+    transition: background-size var(--dur-ui) var(--ease-out), color var(--dur-ui) var(--ease-out);
+  }
+  .header__nav a:hover { color: var(--color-primary); background-size: 100% 2px; }
+  .header__nav a:active { color: var(--color-primary-deep); }
+
+  .header__actions { display: flex; align-items: center; gap: var(--space-2); margin-inline-start: auto; }
+  .header__phone {
+    display: none; align-items: center; min-height: var(--tap);
+    font-family: var(--font-display); font-weight: 600; font-size: var(--text-body);
+    text-decoration: none; white-space: nowrap;
+  }
+  .header__phone:hover { color: var(--color-primary); }
+  .header__phone:active { color: var(--color-primary-deep); }
+  .header__tg { display: none; min-height: var(--tap); padding: 0 var(--space-2); font-size: 0.9375rem; }
+  .header__lang { display: none; align-items: center; gap: var(--space-1); font-size: var(--text-small); font-weight: 600; }
+  .header__lang :global(.future-link) { min-height: var(--tap); min-width: var(--tap); justify-content: center; color: var(--color-muted); }
+  .header__lang-current { min-width: var(--tap); text-align: center; color: var(--color-text); }
+
+  .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: var(--tap); height: var(--tap); flex: none;
+    border-radius: var(--radius); color: var(--color-primary);
+    transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  }
+  .icon-btn:hover { background: var(--color-surface); }
+  .icon-btn:active { transform: scale(.96); }
+
+  .menu { position: static; }
+  :global(html.menu-open) { overflow: hidden; }
+  .menu__toggle { list-style: none; cursor: pointer; color: var(--color-text); }
+  .menu__toggle::-webkit-details-marker { display: none; }
+  .menu__icon-close { display: none; }
+  .menu[open] .menu__icon-open { display: none; }
+  .menu[open] .menu__icon-close { display: inline-flex; }
+  .menu__panel {
+    position: fixed; left: 0; right: 0; top: var(--header-h); bottom: 0;
+    height: calc(100dvh - var(--header-h)); overflow-y: auto; overscroll-behavior: contain;
+    z-index: 60;
+    background: var(--color-bg);
+    border-top: var(--rule) solid var(--color-surface);
+    border-bottom: var(--rule) solid var(--color-border);
+    padding: var(--space-3) var(--space) var(--space-4);
+    display: grid; gap: var(--space-3); align-content: start;
+  }
+  .menu__nav a {
+    display: flex; align-items: center; min-height: 3rem;
+    font-family: var(--font-display); font-weight: 600; font-size: var(--text-figure);
+    text-decoration: none; letter-spacing: var(--tracking-display);
+  }
+  .menu__nav a:hover, .menu__nav a:active { color: var(--color-primary); }
+  .menu__phones { display: grid; gap: var(--space-half); }
+  .menu__phones li { display: flex; align-items: center; gap: var(--space-2); }
+  .menu__nav a, .menu__phones a, .menu__phones span { white-space: nowrap; }
+  .menu__phones a { display: inline-flex; align-items: center; min-height: var(--tap); font-weight: 600; font-size: var(--text-lead); text-decoration: none; }
+  .menu__phones span { color: var(--color-muted); font-size: var(--text-small); }
+  .menu__lang { display: flex; gap: var(--space-2); align-items: center; font-weight: 600; font-size: var(--text-small); }
+  .menu__lang > span:first-child, .menu__lang :global(.future-link) { min-height: var(--tap); display: inline-flex; align-items: center; }
+  .menu__lang :global(.future-link) { color: var(--color-muted); }
+
+  @media (min-width: 720px) {
+    .header__phone { display: inline-flex; }
+    .header__tg { display: inline-flex; }
+    .header__icon { display: none; }
+  }
+  @media (min-width: 1200px) {
+    .header__row { gap: var(--space-4); }
+    .header__nav { display: block; }
+    .header__lang { display: inline-flex; }
+    .menu { display: none; }
+    .header__actions { gap: var(--space-3); margin-inline-start: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .icon-btn:active { transform: none; }
+  }
+</style>

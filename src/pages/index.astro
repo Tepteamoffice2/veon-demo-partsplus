@@ -1,0 +1,515 @@
+---
+// PartsPlus homepage (design/concept.md, ux/demo-home.md): hero, pick, catalog, sto, service, contacts.
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import VinTool from "../components/VinTool.astro";
+import FutureLink from "../components/FutureLink.astro";
+import Icon from "../components/Icon.astro";
+import Footer from "../components/Footer.astro";
+import MobileBar from "../components/MobileBar.astro";
+import { phones, channels, address, categories, brands } from "../data/client";
+import geologicaCyr from "../assets/fonts/geologica-cyrillic.woff2?url";
+import logo from "../assets/partsplus-logo.svg?url";
+
+const vinParts = [
+  { from: 1, to: 3, span: 3, text: "виробник" },
+  { from: 4, to: 9, span: 6, text: "модель, кузов, двигун" },
+  { from: 10, to: 17, span: 8, text: "рік, завод, серійний номер" },
+];
+const carSteps = ["Марка", "Модель", "Рік", "Кузов", "Двигун", "Модифікація"];
+
+const title = "Автозапчастини в Києві з підбором за VIN і власне СТО — PartsPlus";
+const description = "Підберемо запчастину за VIN-кодом: напишіть у Telegram або Viber. Доставка Новою Поштою по Україні, самовивіз і СТО на вул. Сирецька, 31, Київ. Обмін і повернення 14 днів.";
+---
+<Base lang="uk" title={title} description={description}>
+  <Fragment slot="head">
+    <link rel="preload" href={geologicaCyr} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href={logo} type="image/svg+xml" />
+    <meta name="theme-color" content="#0057B8" />
+  </Fragment>
+
+  <Header slot="header" />
+
+  <section id="hero" class="hero" data-rec="R-007,R-016,G-R001,G-R002,MA-R006" aria-labelledby="hero-title">
+    <div class="container hero__grid">
+      <div class="hero__head">
+        <h1 id="hero-title" data-rec="R-003">Автозапчастини за VIN-кодом і власне СТО в Києві</h1>
+        <p class="hero__lead">Надішліть VIN — менеджер підбере деталь, відправимо Новою Поштою по Україні або поставимо на нашому СТО.</p>
+      </div>
+
+      <div class="hero__tool">
+        <VinTool />
+        <div class="hero__foot">
+          <p class="hero__alt">
+            <a class="hero__call" href={phones.kyivstar.href}><Icon name="phone" /> <span>або подзвоніть <span class="num">{phones.kyivstar.label}</span></span></a>
+            <a class="hero__call" href={channels.viber}><Icon name="viber" /> <span>Viber <span class="num">{phones.lifecell.label}</span></span></a>
+          </p>
+          <aside class="hero__place" aria-label="Пункт видачі і СТО" data-rec="R-021">
+            <dl>
+              <div><dt>Адреса</dt><dd class="hero__street">{address.street}</dd></div>
+              <div><dt>Пункт видачі</dt><dd class="num">Пн–Пт 09:00–18:30, Сб 10:00–15:00</dd></div>
+              <div><dt>СТО навпроти</dt><dd class="num">Вт–Сб 09:00–19:00</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pick" class="pick" data-rec="R-009" aria-labelledby="pick-title">
+    <div class="container">
+      <div class="pick__head">
+        <h2 id="pick-title">Три способи знайти деталь</h2>
+        <p class="pick__intro">Найточніший — VIN: 17 знаків описують саме ваш автомобіль.</p>
+      </div>
+
+      <div class="pick__vin">
+        <h3 class="pick__way">За VIN-кодом, через менеджера</h3>
+        <ol class="vinmap" aria-label="Будова VIN-коду">
+          {vinParts.map((part) => (
+            <li class="vinmap__part" style={`--span:${part.span}`}>
+              <span class="vinmap__cells" aria-hidden="true">
+                {Array.from({ length: part.span }, () => <span class="vinmap__cell"></span>)}
+              </span>
+              <span class="vinmap__label"><span class="num">{part.from}–{part.to}</span> {part.text}</span>
+            </li>
+          ))}
+        </ol>
+        <div class="pick__how">
+          <dl class="pick__facts">
+            <div><dt>Де знайти</dt><dd>у свідоцтві про реєстрацію авто</dd></div>
+            <div><dt>Що надіслати</dt><dd>VIN і назву деталі</dd></div>
+            <div><dt>Відповідаємо</dt><dd class="num"><span>Пн–Пт 09:00–18:00,</span> <span>Сб 10:00–15:00</span></dd></div>
+          </dl>
+          <p class="pick__actions">
+            <a class="btn btn--blue" href={channels.telegram} target="_blank" rel="noopener"><Icon name="telegram" /> Telegram</a>
+            <a class="btn btn--outline" href={channels.viber}><Icon name="viber" /> Viber</a>
+            <a class="btn btn--outline" href={phones.kyivstar.href}><Icon name="phone" /> Подзвонити</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="pick__other">
+        <div class="pick__row">
+          <h3 class="pick__way">За артикулом</h3>
+          <p class="pick__text">Назвіть номер деталі менеджеру: він перевірить ціну й наявність.</p>
+          <FutureLink class="pick__future future-link--end" note="Пошук з'явиться у повній версії сайту">Пошук за артикулом</FutureLink>
+        </div>
+        <div class="pick__row">
+          <h3 class="pick__way">За автомобілем</h3>
+          <ol class="steps" aria-label="Кроки підбору за авто">
+            {carSteps.map((step) => <li>{step}</li>)}
+          </ol>
+          <FutureLink class="pick__future future-link--end" note="Підбір за авто з'явиться у повній версії сайту">Підібрати за авто</FutureLink>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="catalog" class="catalog" data-rec="R-014" aria-labelledby="catalog-title">
+    <div class="container">
+      <div class="catalog__head">
+        <h2 id="catalog-title">Що є в каталозі</h2>
+        <p>Запчастини, масла й аксесуари для легкових авто.</p>
+      </div>
+      <ul class="cats">
+        {categories.map((c) => <li><FutureLink>{c}</FutureLink></li>)}
+      </ul>
+      <div class="brands">
+        <p><span class="brands__label">Бренди:</span> {brands.join(", ")} та інші.</p>
+        <FutureLink class="brands__all future-link--end">Усі бренди</FutureLink>
+      </div>
+    </div>
+    <div class="bridge" aria-hidden="true" data-reveal>
+      <div class="container bridge__bars">
+        {Array.from({ length: 17 }, (_, i) => <span class="bridge__bar" style={`--i:${i}`}></span>)}
+      </div>
+    </div>
+  </section>
+
+  <section id="sto" class="sto" data-rec="R-010" aria-labelledby="sto-title">
+    <div class="container sto__grid">
+      <h2 id="sto-title">Власне СТО навпроти пункту видачі</h2>
+      <div class="sto__about">
+        <ul class="sto__list">
+          <li>Діагностика</li>
+          <li>Ремонт</li>
+          <li>Обслуговування</li>
+        </ul>
+        <p>Купили деталь у нас — запишіться на встановлення через дорогу.</p>
+      </div>
+      <div class="sto__call">
+        <p class="sto__label">Запис і питання щодо послуг</p>
+        <a class="sto__phone num" href={phones.sto.href}>{phones.sto.label}</a>
+      </div>
+      <dl class="sto__hours">
+        <div><dt>Працюємо</dt><dd class="num">Вт–Сб 09:00–19:00</dd></div>
+        <div><dt>Вихідні</dt><dd>понеділок і неділя</dd></div>
+        <div><dt>Адреса</dt><dd class="sto__addr">{address.street}, навпроти пункту видачі</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="service" class="service" data-rec="R-011" aria-labelledby="service-title">
+    <div class="container service__grid">
+      <div class="service__main">
+        <h2 id="service-title">Доставка, оплата, гарантія</h2>
+        <div class="acc">
+          <details class="acc__item">
+            <summary>
+              <span class="acc__title">Нова Пошта по всій Україні</span>
+              <span class="acc__fact">Замовлення до 300 грн і великогабаритні — лише за передоплатою.</span>
+              <span class="acc__mark" aria-hidden="true"></span>
+            </summary>
+            <div class="acc__body">
+              <p>Відділення і поштомати. Відправляємо Пн–Пт після 19:00, Сб після 16:00; можливі затримки 1–2 дні. Вартість доставки підкаже менеджер.</p>
+            </div>
+          </details>
+          <details class="acc__item">
+            <summary>
+              <span class="acc__title">Самовивіз і таксі по Києву</span>
+              <span class="acc__fact">Пункт видачі на Куренівці, поруч із нашим СТО.</span>
+              <span class="acc__mark" aria-hidden="true"></span>
+            </summary>
+            <div class="acc__body">
+              <p>Доставку таксі по Києву узгодить менеджер. Укрпошта і кур’єрська доставка тимчасово не працюють.</p>
+            </div>
+          </details>
+          <details class="acc__item">
+            <summary>
+              <span class="acc__title">Переказ, накладений платіж, готівка</span>
+              <span class="acc__fact">Оплата карткою тимчасово не працює.</span>
+              <span class="acc__mark" aria-hidden="true"></span>
+            </summary>
+            <div class="acc__body">
+              <p>Безготівковий переказ на рахунок, накладений платіж «Нова Пошта» або готівка в пункті видачі. Термінал у пункті видачі теж тимчасово не працює.</p>
+            </div>
+          </details>
+          <details class="acc__item">
+            <summary>
+              <span class="acc__title">Обмін і повернення 14 днів</span>
+              <span class="acc__fact">Гарантія — за умовами виробника.</span>
+              <span class="acc__mark" aria-hidden="true"></span>
+            </summary>
+            <div class="acc__body">
+              <p>Строк рахується з дня замовлення, гарантійний документ — у комплекті. Товари з іноземних складів обміну не підлягають.</p>
+            </div>
+          </details>
+        </div>
+        <p class="service__cheaper">Бачили дешевше? <a href={channels.telegram} target="_blank" rel="noopener">Надішліть посилання в Telegram</a>, і ми розглянемо знижку.</p>
+      </div>
+      <aside class="rating" aria-label="Оцінка клієнтів">
+        <p class="rating__value num">4.6</p>
+        <p class="rating__text">загальна оцінка на сторінці відгуків клієнтів PartsPlus</p>
+        <FutureLink class="rating__link future-link--up">Читати відгуки</FutureLink>
+      </aside>
+    </div>
+  </section>
+
+  <section id="contacts" class="contacts" data-rec="R-021" aria-labelledby="contacts-title">
+    <div class="container">
+      <div class="contacts__head">
+        <h2 id="contacts-title">Приїжджайте на Сирецьку, 31</h2>
+        <p class="contacts__addr">{address.city}, {address.street} ({address.district})</p>
+        <a class="btn btn--outline" href={channels.map} target="_blank" rel="noopener"><Icon name="pin" /> Відкрити на карті</a>
+      </div>
+
+      <div class="contacts__grid">
+        <div class="place">
+          <h3>Пункт видачі</h3>
+          <dl class="hours">
+            <div><dt>Пн–Пт</dt><dd class="num">09:00–18:30</dd></div>
+            <div><dt>Сб</dt><dd class="num">10:00–15:00</dd></div>
+            <div><dt>Нд</dt><dd>вихідний</dd></div>
+          </dl>
+          <p class="place__note">Замовлення і дзвінки приймаємо <span class="num">Пн–Пт 09:00–18:00, Сб 10:00–15:00</span>.</p>
+          <ul class="phones">
+            {[phones.kyivstar, phones.vodafone, phones.lifecell].map((ph) => (
+              <li><a class="num" href={ph.href}>{ph.label}</a><span>{ph.operator}</span></li>
+            ))}
+          </ul>
+          <p class="channels">
+            <a href={channels.telegram} target="_blank" rel="noopener"><Icon name="telegram" /> Telegram</a>
+            <a href={channels.viber}><Icon name="viber" /> Viber <span class="num">{phones.lifecell.label}</span></a>
+            <a href={`mailto:${channels.email}`}>{channels.email}</a>
+          </p>
+        </div>
+
+        <div class="street" aria-hidden="true"></div>
+
+        <div class="place">
+          <h3>СТО</h3>
+          <dl class="hours">
+            <div><dt>Вт–Сб</dt><dd class="num">09:00–19:00</dd></div>
+            <div><dt>Пн, Нд</dt><dd>вихідний</dd></div>
+          </dl>
+          <p class="place__note">Навпроти пункту видачі. Запис і питання щодо послуг:</p>
+          <ul class="phones">
+            <li><a class="num" href={phones.sto.href}>{phones.sto.label}</a><span>СТО</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+  <MobileBar slot="footer" />
+</Base>
+
+<script src="../scripts/home.ts"></script>
+
+<style>
+  /* ---------- hero: the blue PARTS half ---------- */
+  .hero {
+    background: var(--color-primary); color: var(--color-on-primary);
+    padding-block: var(--space-4) var(--space-5);
+  }
+  .hero :focus-visible { outline-color: var(--color-focus-on-primary); }
+  .hero__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  .hero h1 { font-size: var(--text-hero); max-width: 14ch; text-wrap: balance; }
+  .hero__lead { margin-block-start: var(--space-3); max-width: 40ch; font-size: var(--text-lead); line-height: 1.45; color: var(--color-on-primary-muted); }
+  .hero__alt { display: flex; flex-wrap: wrap; gap: 0 var(--space-3); margin-block-start: var(--space-1); }
+  .hero__call {
+    display: inline-flex; align-items: center; gap: var(--space-1); min-height: 3rem;
+    font-weight: 600; text-decoration: none; color: var(--color-on-primary);
+  }
+  .hero__call > span { text-decoration: underline; text-decoration-color: var(--color-on-primary-muted); text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
+  .hero__call:hover > span { text-decoration-color: var(--color-accent); }
+  .hero__call:active { color: var(--color-accent); }
+  .hero__call :global(.icon) { color: var(--color-accent); }
+  .hero__place { display: none; }
+
+  @media (min-width: 720px) {
+    .hero { padding-block: var(--space-5) var(--space-6); }
+    .hero__grid { gap: var(--space-5); }
+    .hero__foot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-2) var(--space-4); margin-block-start: var(--space-1); }
+    .hero__alt { margin: 0; }
+    .hero__place { display: block; font-size: var(--text-body); }
+    .hero__place dl { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-1) var(--space-3); }
+    .hero__place .hero__street { font-weight: 600; }
+    .hero__place dl > div { padding-inline-start: var(--space-2); border-inline-start: var(--rule) solid var(--color-on-primary-muted); }
+    .hero__place dt { color: var(--color-on-primary-muted); font-size: var(--text-small); }
+    .hero__place dd { color: var(--color-on-primary); white-space: nowrap; }
+  }
+  @media (min-width: 1100px) {
+    .hero__head { max-width: calc(var(--container) * 0.75); }
+  }
+  @media (max-width: 719.98px) {
+    .hero h1 { max-width: none; }
+  }
+  @media (max-width: 359.98px) {
+    .hero h1 { font-size: 2rem; }
+  }
+
+  /* ---------- pick: one VIN taken apart, two other ways as rows ---------- */
+  .pick { padding-block: var(--space-section-s) var(--space-6); }
+  .pick__head { display: grid; gap: var(--space-2); margin-block-end: var(--space-6); }
+  .pick__intro { font-size: var(--text-lead); color: var(--color-muted); max-width: 40ch; }
+  .pick__way { font-size: var(--text-lead); }
+  .pick__vin { padding-block-end: var(--space-5); }
+
+  .vinmap { display: grid; gap: var(--space-2); margin-block: var(--space-3) var(--space-4); counter-reset: vin; }
+  .vinmap__part { display: flex; align-items: center; gap: var(--space-2); }
+  .vinmap__cells { display: grid; grid-template-columns: repeat(var(--span), 0.875rem); gap: var(--space-half); flex: none; }
+  .vinmap__cell { display: block; height: 1.75rem; border: 1.5px solid var(--color-primary); border-radius: var(--radius); counter-increment: vin; }
+  .vinmap__part:first-child .vinmap__cell { background: var(--color-primary); }
+  .vinmap__label { font-size: var(--text-body); }
+  .vinmap__label .num { font-weight: 700; color: var(--color-primary); }
+
+  .pick__how { display: grid; gap: var(--space-4); }
+  .pick__facts { display: grid; gap: var(--space-2); }
+  .pick__facts dt { font-size: var(--text-small); color: var(--color-muted); }
+  .pick__facts dd { font-weight: 600; }
+  .pick__facts dd > span { white-space: nowrap; }
+  .pick__actions { display: none; flex-wrap: wrap; gap: var(--space-1) var(--space-2); }
+  @media (min-width: 720px) { .pick__actions { display: flex; } }
+
+  .pick__other { border-top: var(--rule) solid var(--color-border); }
+  .pick__row { display: grid; gap: var(--space-2); padding-block: var(--space-4); border-bottom: var(--rule) solid var(--color-border); align-items: center; }
+  .pick__text { color: var(--color-muted); max-width: 46ch; }
+  .pick__row :global(.pick__future) { min-height: var(--tap); font-weight: 600; color: var(--color-primary); justify-self: start; }
+  .steps { display: flex; flex-wrap: wrap; gap: var(--space-1); counter-reset: step; }
+  .steps li {
+    counter-increment: step; display: inline-flex; align-items: center; gap: var(--space-1);
+    min-height: 2.25rem; padding: 0 var(--space-2);
+    border: var(--rule) solid var(--color-border); border-radius: var(--radius);
+    font-size: var(--text-small); font-weight: 400;
+  }
+  .steps li::before { content: counter(step); font-family: var(--font-display); font-weight: 700; color: var(--color-primary); }
+
+  @media (min-width: 720px) {
+    .vinmap { grid-template-columns: repeat(17, minmax(0, 1fr)); gap: var(--space-2) var(--vin-gap); }
+    .vinmap__part { display: grid; grid-column: span var(--span); grid-template-columns: subgrid; gap: var(--space-2) var(--vin-gap); align-items: stretch; }
+    .vinmap__cells { display: contents; }
+    .vinmap__cell { height: clamp(3rem, 1rem + 5vw, 5.5rem); display: flex; align-items: center; justify-content: center; }
+    .vinmap__cell::before {
+      content: counter(vin); font-family: var(--font-display); font-weight: 600;
+      font-size: clamp(1rem, 0.4rem + 1.5vw, 2rem); color: var(--color-primary); font-variant-numeric: tabular-nums;
+    }
+    .vinmap__part:first-child .vinmap__cell::before { color: var(--color-on-primary); }
+    .vinmap__label { grid-column: 1 / -1; padding-block-start: var(--space-1); border-top: 4px solid var(--color-primary); }
+    .pick__facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pick__row { grid-template-columns: minmax(0, 3fr) minmax(0, 7fr) minmax(0, 2fr); gap: var(--space-3); }
+    .pick__row :global(.pick__future) { justify-self: end; }
+  }
+  @media (min-width: 1100px) {
+    .pick__how { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; }
+    .pick__actions { justify-content: flex-end; }
+    .steps { flex-wrap: nowrap; }
+    .steps li { white-space: nowrap; }
+  }
+
+  /* ---------- catalog: the range as a set of words ---------- */
+  .catalog { background: var(--color-surface); padding-block: var(--space-section-s) 0; }
+  .catalog__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2) var(--space-4); margin-block-end: var(--space-5); }
+  .catalog__head p { color: var(--color-muted); font-size: var(--text-lead); }
+  .cats {
+    display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4);
+    font-family: var(--font-display); font-weight: 600; letter-spacing: var(--tracking-display);
+    font-size: clamp(1.5rem, 0.95rem + 2.3vw, 2.75rem); line-height: 1.2;
+  }
+  .cats li { display: inline-flex; align-items: center; gap: var(--space-2); }
+  .cats li::before { content: ""; flex: none; width: 6px; height: 0.8em; background: var(--color-primary); }
+  .cats :global(.future-link) { min-height: var(--tap); text-decoration-thickness: 1px; transition: color var(--dur-fast) var(--ease-out); }
+  .cats :global(.future-link:hover) { color: var(--color-primary); }
+  .brands {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2) var(--space-4);
+    margin-block-start: var(--space-6); padding-block-start: var(--space-3);
+    border-top: var(--rule) solid var(--color-border); color: var(--color-muted);
+  }
+  .brands p { max-width: 72ch; }
+  .brands__label { color: var(--color-text); font-weight: 600; }
+  .brands :global(.brands__all) { min-height: var(--tap); font-weight: 600; color: var(--color-primary); }
+
+  /* ---------- bridge: 17 logo lines, blue into gold ---------- */
+  .bridge { margin-block-start: var(--space-6); height: clamp(6rem, 3rem + 9vw, 11rem); }
+  .bridge__bars { display: grid; grid-template-columns: repeat(17, minmax(0, 1fr)); gap: var(--vin-gap); height: 100%; }
+  .bridge__bar { position: relative; justify-self: center; width: var(--stripe-w); height: 100%; }
+  .bridge__bar::before, .bridge__bar::after {
+    content: ""; position: absolute; left: 0; right: 0; height: 50%;
+    transition: transform 320ms var(--ease-out); transition-delay: calc(var(--i) * 30ms);
+  }
+  .bridge__bar::before { top: 0; background: var(--color-primary); transform-origin: top; }
+  .bridge__bar::after { bottom: 0; background: var(--color-accent); transform-origin: bottom; }
+  :global(.js) .bridge[data-reveal]:not(.is-visible) { opacity: 1; transform: none; }
+  :global(.js) .bridge:not(.is-visible) .bridge__bar::before,
+  :global(.js) .bridge:not(.is-visible) .bridge__bar::after { transform: scaleY(0); }
+  @media (max-width: 719.98px) {
+    .bridge__bar::before, .bridge__bar::after { transition-duration: 500ms; transition-delay: 0ms; }
+  }
+
+  /* ---------- sto: the gold PLUS half ---------- */
+  .sto { background: var(--color-accent); color: var(--color-text); padding-block: var(--space-section-m) var(--space-section-s); }
+  .sto :focus-visible { outline-color: var(--color-focus-on-accent); }
+  .sto__grid { display: grid; gap: var(--space-4); }
+  .sto h2 { max-width: 16ch; }
+  .sto__list { display: grid; gap: var(--space-half); font-family: var(--font-display); font-weight: 600; font-size: var(--text-figure); line-height: 1.2; }
+  .sto__about p { margin-block-start: var(--space-2); max-width: 36ch; }
+  .sto__label { font-weight: 600; font-size: var(--text-small); }
+  .sto__phone {
+    display: inline-block; margin-block-start: var(--space-1);
+    font-family: var(--font-display); font-weight: 700; font-size: var(--text-hero);
+    line-height: 1.05; letter-spacing: -0.03em; white-space: nowrap;
+    color: var(--color-text); text-decoration: none;
+    border-bottom: 4px solid var(--color-text);
+    transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  }
+  .sto__phone:hover { color: var(--color-primary-deep); border-color: var(--color-primary-deep); }
+  .sto__phone:active { transform: scale(.98); }
+  .sto__hours { display: grid; gap: var(--space-2); }
+  .sto__hours dt { font-size: var(--text-small); font-weight: 600; }
+  .sto__hours dd { font-family: var(--font-display); font-weight: 600; font-size: var(--text-figure); line-height: 1.2; }
+  .sto__hours .sto__addr { font-family: var(--font-body); font-size: var(--text-body); line-height: 1.4; }
+  @media (min-width: 1100px) {
+    .sto__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-3); row-gap: var(--space-6); }
+    .sto h2 { grid-column: 1 / span 7; }
+    .sto__about { grid-column: 9 / span 4; align-self: end; }
+    .sto__call { grid-column: 1 / span 8; }
+    .sto__hours { grid-column: 9 / span 4; align-self: end; padding-block-end: var(--space-2); }
+  }
+
+  /* ---------- service: facts in the summary, details on demand ---------- */
+  .service { padding-block: var(--space-section-s) var(--space-section); }
+  .service__grid { display: grid; gap: var(--space-6); }
+  .acc { margin-block-start: var(--space-5); border-top: var(--rule) solid var(--color-border); }
+  .acc__item { border-bottom: var(--rule) solid var(--color-border); }
+  .acc__item summary {
+    list-style: none; cursor: pointer;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-3); row-gap: var(--space-half);
+    padding-block: var(--space-3);
+  }
+  .acc__item summary::-webkit-details-marker { display: none; }
+  .acc__title { grid-column: 1; font-family: var(--font-display); font-weight: 600; font-size: var(--text-lead); line-height: 1.25; transition: color var(--dur-fast) var(--ease-out); }
+  .acc__fact { grid-column: 1; color: var(--color-text); }
+  .acc__item summary:hover .acc__title { color: var(--color-primary); }
+  .acc__item summary:active .acc__title { color: var(--color-primary-deep); }
+  .acc__mark {
+    grid-column: 2; grid-row: 1 / span 2; align-self: center; position: relative;
+    width: var(--tap); height: var(--tap); border: 1.5px solid var(--color-primary); border-radius: var(--radius);
+  }
+  .acc__mark::before, .acc__mark::after {
+    content: ""; position: absolute; left: 50%; top: 50%; width: 16px; height: 2px; margin: -1px 0 0 -8px;
+    background: var(--color-primary); transition: transform var(--dur-ui) var(--ease-out);
+  }
+  .acc__mark::after { transform: rotate(90deg); }
+  .acc__item[open] .acc__mark::after { transform: rotate(90deg) scaleX(0); }
+  .acc__body { padding-block-end: var(--space-3); max-width: 62ch; color: var(--color-muted); }
+  .acc__item[open] .acc__body { animation: acc-in var(--dur-ui) var(--ease-out); }
+  @keyframes acc-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .service__cheaper { margin-block-start: var(--space-4); font-size: var(--text-lead); }
+  .service__cheaper a { color: var(--color-primary); font-weight: 600; text-underline-offset: 0.2em; }
+  .service__cheaper a:hover { color: var(--color-primary-deep); }
+  .rating { display: grid; gap: var(--space-1); justify-items: start; align-content: start; padding-block-start: var(--space-3); border-top: 4px solid var(--color-accent); }
+  .rating__value { font-family: var(--font-display); font-weight: 700; font-size: var(--text-hero); line-height: 1; letter-spacing: var(--tracking-display); }
+  .rating__text { color: var(--color-muted); max-width: 28ch; }
+  .rating :global(.rating__link) { min-height: var(--tap); font-weight: 600; color: var(--color-primary); }
+  @media (min-width: 1100px) {
+    .service__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-3); }
+    .service__main { grid-column: 1 / span 8; }
+    .rating { grid-column: 10 / span 3; margin-block-start: calc(var(--text-section) * 1.04 + var(--space-5)); }
+  }
+
+  /* ---------- contacts: two places across the street ---------- */
+  .contacts { padding-block: 0 var(--space-section); }
+  .contacts > .container { padding-block-start: var(--space-section-s); border-top: var(--rule) solid var(--color-border); }
+  .contacts__head { display: grid; gap: var(--space-2); justify-items: start; margin-block-end: var(--space-6); }
+  .contacts__addr { font-size: var(--text-lead); }
+  .contacts__grid { display: grid; gap: var(--space-6); }
+  .street { display: none; }
+  .place h3 { font-size: var(--text-figure); }
+  .hours { display: grid; margin-block-start: var(--space-3); max-width: 26rem; }
+  .hours > div { display: flex; justify-content: space-between; gap: var(--space-3); padding-block: var(--space-1); border-bottom: var(--rule) solid var(--color-border); }
+  .hours dt { font-weight: 600; }
+  .place__note { margin-block-start: var(--space-2); color: var(--color-muted); max-width: 40ch; }
+  .phones { display: grid; margin-block-start: var(--space-3); }
+  .phones li { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: var(--space-2); }
+  .phones a {
+    display: inline-flex; align-items: center; min-height: var(--tap);
+    font-family: var(--font-display); font-weight: 600; font-size: var(--text-figure);
+    text-decoration: none; white-space: nowrap;
+  }
+  .phones a:hover { color: var(--color-primary); }
+  .phones a:active { color: var(--color-primary-deep); }
+  .phones span { font-size: var(--text-small); color: var(--color-muted); }
+  .channels { display: flex; flex-wrap: wrap; gap: 0 var(--space-3); margin-block-start: var(--space-2); }
+  .channels a {
+    display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--tap);
+    color: var(--color-primary); font-weight: 600; text-underline-offset: 0.22em;
+  }
+  .channels a:hover { color: var(--color-primary-deep); }
+  @media (min-width: 900px) {
+    .contacts__grid { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: var(--space-6); }
+    .street { display: block; position: relative; width: var(--stripe-w); }
+    .street::before, .street::after { content: ""; position: absolute; left: 0; right: 0; height: 50%; }
+    .street::before { top: 0; background: var(--color-primary); }
+    .street::after { bottom: 0; background: var(--color-accent); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bridge__bar::before, .bridge__bar::after { transition: none; }
+    :global(.js) .bridge:not(.is-visible) .bridge__bar::before,
+    :global(.js) .bridge:not(.is-visible) .bridge__bar::after { transform: none; }
+    .acc__item[open] .acc__body { animation: none; }
+    .sto__phone:active { transform: none; }
+  }
+</style>

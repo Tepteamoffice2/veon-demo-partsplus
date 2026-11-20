@@ -1,0 +1,184 @@
+---
+// VIN-лінійка: one tool with two modes (VIN / Артикул). Nothing is sent from the page:
+// the Telegram button opens the real chat and, if a VIN is typed, copies it to the clipboard first.
+import FutureLink from "./FutureLink.astro";
+import { channels, phones } from "../data/client";
+const cells = Array.from({ length: 17 }, (_, i) => i);
+---
+<div class="vin" data-vin data-rec="R-009">
+  <div class="vin__tabs" role="tablist" aria-label="Як шукати деталь">
+    <button class="vin__tab" type="button" role="tab" id="tab-vin" aria-selected="true" aria-controls="panel-vin">VIN-код</button>
+    <button class="vin__tab" type="button" role="tab" id="tab-art" aria-selected="false" aria-controls="panel-art" tabindex="-1">Артикул</button>
+    <span class="vin__tab-line" aria-hidden="true"></span>
+  </div>
+
+  <div class="vin__panels">
+    <div class="vin__panel is-active" id="panel-vin" role="tabpanel" aria-labelledby="tab-vin">
+      <div class="vin__row">
+        <div class="vin__field">
+          <div class="vin__line">
+            <label class="visually-hidden" for="vin-input">VIN-код автомобіля, 17 знаків</label>
+            <input class="vin__input" id="vin-input" name="vin" type="text" maxlength="17" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="VIN-код, 17 знаків" aria-describedby="vin-count vin-hint" data-vin-input />
+            <div class="vin__cells" aria-hidden="true">
+              {cells.map((i) => <span class="vin__cell" style={`--i:${i}`}><span class="vin__char"></span></span>)}
+            </div>
+          </div>
+          <p class="vin__meta">
+            <span class="vin__count num" id="vin-count" data-vin-count>0 / 17</span>
+            <span id="vin-hint">латиниця і цифри, без I, O, Q</span>
+            <span class="vin__status" role="status" data-vin-status></span>
+          </p>
+        </div>
+        <a class="btn btn--accent btn--l vin__send" href={channels.telegram} target="_blank" rel="noopener" data-vin-send>Надіслати VIN у Telegram</a>
+      </div>
+    </div>
+
+    <div class="vin__panel" id="panel-art" role="tabpanel" aria-labelledby="tab-art">
+      <div class="vin__row">
+        <div class="vin__field vin__field--art">
+          <label class="visually-hidden" for="art-input">Артикул або назва деталі</label>
+          <input class="vin__input vin__input--art" id="art-input" name="article" type="text" autocomplete="off" spellcheck="false" placeholder="Артикул або назва деталі" aria-describedby="art-hint" />
+        </div>
+        <FutureLink class="vin__find future-link--end" note="Пошук з'явиться у повній версії сайту. Зараз назвіть артикул менеджеру">Знайти</FutureLink>
+      </div>
+      <p class="vin__meta vin__art-actions"><span id="art-hint">Ціну й наявність за артикулом зараз підкаже менеджер:</span>
+        <a href={channels.telegram} target="_blank" rel="noopener">написати в Telegram</a>
+        <a href={phones.kyivstar.href}>подзвонити <span class="num">{phones.kyivstar.label}</span></a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .vin { --cell-h: var(--control-h-l); color: var(--color-on-primary); }
+  .vin :focus-visible { outline-color: var(--color-focus-on-primary); }
+
+  /* Tabs */
+  .vin__tabs { position: relative; display: inline-flex; margin-block-end: var(--space-2); }
+  .vin__tab {
+    min-height: var(--tap); padding: 0 var(--space-2);
+    background: none; border: 0; cursor: pointer;
+    font-family: var(--font-body); font-weight: 600; font-size: var(--text-body);
+    color: var(--color-on-primary-muted);
+    transition: color var(--dur-ui) var(--ease-out);
+  }
+  .vin__tab:first-child { padding-inline-start: 0; }
+  .vin__tab[aria-selected="true"] { color: var(--color-on-primary); }
+  .vin__tab:hover { color: var(--color-on-primary); }
+  .vin__tab:active { color: var(--color-accent); }
+  .vin__tab-line { display: none; }
+  :global(.js) .vin__tab-line {
+    display: block; position: absolute; left: 0; bottom: 0;
+    width: 1px; height: 3px; background: var(--color-accent);
+    transform-origin: left;
+    transform: translateX(var(--tab-x, 0px)) scaleX(var(--tab-w, 56));
+    transition: transform var(--dur-ui) var(--ease-out);
+  }
+
+  /* Panels: stacked without JS; one cell with a crossfade once scripting runs */
+  .vin__panels { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+  :global(.js) .vin__panels { gap: 0; }
+  :global(.js) .vin__panel { grid-area: 1 / 1; transition: opacity var(--dur-ui) var(--ease-out), visibility 0s linear var(--dur-ui); }
+  :global(.js) .vin__panel:not(.is-active) { opacity: 0; visibility: hidden; }
+  :global(.js) .vin__panel.is-active { transition: opacity var(--dur-ui) var(--ease-out), visibility 0s; }
+
+  .vin__row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-2); }
+  .vin__line { position: relative; }
+  .vin__field { position: relative; flex: 1 1 36rem; min-width: 0; }
+
+  .vin__input {
+    display: block; width: 100%; height: var(--control-h); margin: 0; padding: 0 var(--space-2);
+    font-family: var(--font-display); font-weight: 600; font-size: 1.25rem;
+    letter-spacing: 0.02em; font-variant-numeric: tabular-nums;
+    color: var(--color-on-primary); background: transparent;
+    border: 1.5px solid var(--color-on-primary-muted); border-radius: var(--radius);
+  }
+  .vin__input::placeholder { color: var(--color-on-primary-muted); letter-spacing: 0; text-transform: none; font-family: var(--font-body); font-weight: 400; font-size: var(--text-body); opacity: 1; }
+  .vin__input:hover { border-color: var(--color-on-primary); }
+  .vin__input:focus { outline: none; }
+  .vin__input:focus-visible { outline: var(--rule-strong) solid var(--color-focus-on-primary); outline-offset: var(--rule-strong); }
+
+  /* Cells: on the phone a row of 17 short ticks under the field */
+  .vin__cells { display: grid; grid-template-columns: repeat(17, minmax(0, 1fr)); gap: var(--space-half); margin-block-start: var(--space-1); }
+  .vin__cell { position: relative; display: block; height: 6px; background: var(--color-primary-deep); overflow: hidden; transform-origin: bottom; }
+  .vin__cell::after {
+    content: ""; position: absolute; inset: 0; background: var(--color-accent);
+    transform: scaleX(0); transform-origin: left; transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .vin__cell.is-filled::after { transform: scaleX(1); }
+  .vin__char { display: none; }
+  .vin__cell { animation: vin-rise 300ms var(--ease-out) both; animation-delay: calc(120ms + var(--i) * 12ms); }
+  @keyframes vin-rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+  .vin__send { flex: 1 1 100%; }
+  .vin__meta { display: flex; flex-wrap: wrap; gap: var(--space-half) var(--space-2); margin-block-start: var(--space-1); font-size: var(--text-small); color: var(--color-on-primary-muted); }
+  .vin__count { color: var(--color-on-primary); font-weight: 600; }
+  .vin__status { color: var(--color-accent); font-weight: 600; }
+  .vin__art-actions { align-items: center; }
+  .vin__art-actions a {
+    display: inline-flex; align-items: center; min-height: var(--tap);
+    font-weight: 600; color: var(--color-on-primary);
+    text-decoration: underline; text-decoration-color: var(--color-accent); text-underline-offset: 0.25em;
+  }
+  .vin__art-actions a:hover { color: var(--color-accent); }
+  .vin__art-actions a:active { color: var(--color-on-primary-muted); }
+  @media (min-width: 900px) { .vin__art-actions a { min-height: 0; } }
+  .vin__status:empty { display: none; }
+
+  .vin :global(.vin__find) {
+    flex: 1 1 100%; justify-content: center; min-height: var(--control-h); padding: 0 var(--space-4);
+    font-weight: 600; color: var(--color-on-primary);
+    border: 1.5px dashed var(--color-on-primary-muted); border-radius: var(--radius);
+    text-decoration: none;
+  }
+  .vin :global(.vin__find:hover) { border-color: var(--color-on-primary); }
+
+  @media (max-width: 719.98px) {
+    .vin__send { padding-inline: var(--space-2); font-size: var(--text-lead); }
+  }
+  @media (max-width: 359.98px) {
+    .vin__send { font-size: var(--text-body); }
+  }
+  @media (min-width: 720px) {
+    .vin__send, .vin :global(.vin__find) { flex: 0 0 auto; }
+    .vin__field--art { flex-basis: 30rem; }
+  }
+
+  /* Desktop: the VIN-лінійка itself, 17 cells, the real input lies over them */
+  @media (min-width: 900px) {
+    .vin__send { min-height: var(--cell-h); }
+    .vin :global(.vin__find) { min-height: var(--cell-h); }
+    .vin__input--art { height: var(--cell-h); font-size: var(--text-lead); }
+    .vin__field:not(.vin__field--art) .vin__cells {
+      margin: 0; gap: 0; height: var(--cell-h);
+    }
+    .vin__field:not(.vin__field--art) .vin__cell {
+      height: 100%; background: transparent;
+      border-inline-start: var(--rule) solid var(--color-on-primary-muted);
+      display: flex; align-items: center; justify-content: center;
+      transition: background-color var(--dur-fast) var(--ease-out);
+      animation-duration: 250ms; animation-delay: calc(150ms + var(--i) * 25ms);
+    }
+    .vin__field:not(.vin__field--art) .vin__cell:first-child { border-inline-start-color: transparent; }
+    .vin__field:not(.vin__field--art) .vin__cell::after { inset: auto 0 0 0; height: 4px; }
+    .vin__char {
+      display: block; font-family: var(--font-display); font-weight: 600;
+      font-size: clamp(1.5rem, 0.4rem + 2.2vw, 2.5rem); line-height: 1; font-variant-numeric: tabular-nums;
+      color: var(--color-on-primary); transition: opacity var(--dur-fast) var(--ease-out);
+    }
+    .vin__cell:not(.is-filled) .vin__char { opacity: 0; }
+    :global(.js) .vin__field:not(.vin__field--art) .vin__input {
+      position: absolute; inset: 0; z-index: 1; height: 100%;
+      color: transparent; caret-color: transparent; background: transparent;
+      cursor: text;
+    }
+    :global(.js) .vin__field:not(.vin__field--art) .vin__input::placeholder { color: transparent; }
+    :global(.js) .vin__field:not(.vin__field--art) .vin__input::selection { background: transparent; }
+    :global(.js) .vin.is-focused .vin__cell.is-current { background: var(--color-primary-deep); }
+    :global(html:not(.js)) .vin__field:not(.vin__field--art) .vin__cells { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vin__cell { animation: none; }
+  }
+</style>

@@ -1,0 +1,68 @@
+---
+import FutureLink from "./FutureLink.astro";
+import logo from "../assets/partsplus-logo.svg?url";
+import { nav, socials } from "../data/client";
+const future = [
+  "Про компанію",
+  "Відгуки",
+  "Статті та новини",
+  "Гарантія й повернення",
+  "Договір оферти",
+  "Політика конфіденційності",
+  "Кошик",
+  "Кабінет і «Гараж»",
+];
+---
+<footer class="site-footer" data-footer>
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <a class="footer__logo" href="#top"><img src={logo} width="88" height="60" alt="PartsPlus, на початок сторінки" /></a>
+      <p>Автозапчастини з підбором за VIN, доставка по Україні і власне СТО в Києві.</p>
+    </div>
+    <nav class="footer__col footer__col--nav" aria-label="Розділи сторінки, футер">
+      <p class="footer__title">На сторінці</p>
+      <ul>{nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul>
+    </nav>
+    <div class="footer__col footer__col--future">
+      <p class="footer__title">Повна версія сайту</p>
+      <ul>{future.map((label) => <li><FutureLink class="future-link--up">{label}</FutureLink></li>)}</ul>
+    </div>
+    <div class="footer__col footer__col--social" data-rec="R-020">
+      <p class="footer__title">Соцмережі</p>
+      <ul>{socials.map((s) => <li><a href={s.href} target="_blank" rel="noopener">{s.name}</a></li>)}</ul>
+    </div>
+  </div>
+  <div class="container footer__legal">
+    <p>© 2026 PartsPlus</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--color-surface); padding-block: var(--space-6) var(--space-4); font-size: var(--text-small); }
+  .footer__grid { display: grid; gap: var(--space-5) var(--space-3); grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); }
+  .footer__brand { grid-column: 1 / -1; display: grid; gap: var(--space-2); max-width: 32ch; color: var(--color-muted); }
+  .footer__logo { display: inline-flex; width: max-content; border-radius: var(--radius); }
+  .footer__logo img { height: 60px; width: auto; }
+  .footer__title { font-family: var(--font-body); font-weight: 600; font-size: var(--text-small); color: var(--color-muted); letter-spacing: 0; }
+  .footer__col ul { display: grid; gap: 0; margin-block-start: var(--space-1); }
+  .footer__col li { display: flex; }
+  .footer__col a, .footer__col :global(.future-link) {
+    display: inline-flex; align-items: center; min-height: var(--tap);
+    font-size: var(--text-body); color: var(--color-text);
+  }
+  .footer__col a { text-decoration: none; white-space: nowrap; }
+  .footer__col a:hover { color: var(--color-primary); text-decoration: underline; text-underline-offset: 0.22em; }
+  .footer__col a:active { color: var(--color-primary-deep); }
+  .footer__legal { margin-block-start: var(--space-5); padding-block-start: var(--space-3); border-top: var(--rule) solid var(--color-border); color: var(--color-muted); }
+
+  @media (min-width: 900px) {
+    .footer__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .footer__brand { grid-column: 1 / span 3; align-content: start; }
+    .footer__col--nav { grid-column: 5 / span 3; }
+    .footer__col--future { grid-column: 8 / span 3; }
+    .footer__col--social { grid-column: 11 / span 2; }
+  }
+  @media (max-width: 719.98px) {
+    .site-footer { padding-block-end: calc(var(--space-4) + var(--control-h)); }
+  }
+</style>
